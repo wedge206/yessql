@@ -16,6 +16,7 @@ namespace YesSql
         string TablePrefix { get; set; }
         int SessionPoolSize { get; set; }
         bool QueryGatingEnabled { get; set; }
+        int CommandTimeout { get; set; }
     }
 
     public static class ConfigurationExtensions
@@ -65,6 +66,12 @@ namespace YesSql
         public static IConfiguration UseLogger(this IConfiguration configuration, ILogger logger)
         {
             configuration.Logger = logger;
+            return configuration;
+        }
+
+        public static IConfiguration SetCommandTimeout(this IConfiguration configuration, int timeout)
+        {
+            configuration.CommandTimeout = timeout;
             return configuration;
         }
     }

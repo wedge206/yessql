@@ -17,6 +17,7 @@ namespace YesSql.Sql
         public ISqlDialect Dialect { get; private set; }
         public DbConnection Connection { get; private set; }
         public DbTransaction Transaction { get; private set; }
+        public int CommandTimeout { get; private set; }
         public bool ThrowOnError { get; set; } = true;
 
         public SchemaBuilder(IConfiguration configuration, DbTransaction transaction, bool throwOnError = true)
@@ -27,6 +28,7 @@ namespace YesSql.Sql
             _builder = CommandInterpreterFactory.For(Connection);
             Dialect = SqlDialectFactory.For(configuration.ConnectionFactory.DbConnectionType);
             TablePrefix = configuration.TablePrefix;
+            CommandTimeout = configuration.CommandTimeout;
             ThrowOnError = throwOnError;
         }
 
@@ -35,7 +37,7 @@ namespace YesSql.Sql
             foreach (var statement in statements)
             {
                 _logger.LogTrace(statement);
-                Connection.Execute(statement, null, Transaction);
+                Connection.Execute(statement, null, Transaction, CommandTimeout);
             }
         }
 

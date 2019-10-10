@@ -821,7 +821,7 @@ namespace YesSql.Services
                     var localTransaction = (DbTransaction)args[3];
 
                     localSession._store.Configuration.Logger.LogDebug(localSql);
-                    return localTransaction.Connection.ExecuteScalarAsync<int>(localSql, localParameters, localTransaction);
+                    return localTransaction.Connection.ExecuteScalarAsync<int>(localSql, localParameters, localTransaction, localSession._store.Configuration.CommandTimeout);
                 }, 
                 _session, sql, parameters, transaction);
             }
@@ -916,7 +916,7 @@ namespace YesSql.Services
                             var localTransaction = (DbTransaction)args[2];
 
                             localQuery._session._store.Configuration.Logger.LogDebug(localSql);
-                            return localTransaction.Connection.QueryAsync<T>(localSql, localQuery._queryState._sqlBuilder.Parameters, localTransaction);
+                            return localTransaction.Connection.QueryAsync<T>(localSql, localQuery._queryState._sqlBuilder.Parameters, localTransaction, localQuery._session._store.Configuration.CommandTimeout);
                         },
                         _query,
                         sql,
@@ -935,7 +935,7 @@ namespace YesSql.Services
                             var localTransaction = (DbTransaction)args[2];
 
                             localQuery._session._store.Configuration.Logger.LogDebug(localSql);
-                            return localTransaction.Connection.QueryAsync<Document>(localSql, localQuery._queryState._sqlBuilder.Parameters, localTransaction);
+                            return localTransaction.Connection.QueryAsync<Document>(localSql, localQuery._queryState._sqlBuilder.Parameters, localTransaction, localQuery._session._store.Configuration.CommandTimeout);
                         }, 
                         _query,
                         sql,
@@ -998,7 +998,7 @@ namespace YesSql.Services
                             var localTransaction = (DbTransaction)args[2];
 
                             localQuery._session._store.Configuration.Logger.LogDebug(localSql);
-                            return localTransaction.Connection.QueryAsync<T>(localSql, localQuery._queryState._sqlBuilder.Parameters, localTransaction);
+                            return localTransaction.Connection.QueryAsync<T>(localSql, localQuery._queryState._sqlBuilder.Parameters, localTransaction, localQuery._session._store.Configuration.CommandTimeout);
                         },
                         _query,
                         sql,
@@ -1024,7 +1024,7 @@ namespace YesSql.Services
                             var localTransaction = (DbTransaction)args[2];
 
                             localQuery._session._store.Configuration.Logger.LogDebug(localSql);
-                            return localTransaction.Connection.QueryAsync<Document>(localSql, localQuery._queryState._sqlBuilder.Parameters, localTransaction);
+                            return localTransaction.Connection.QueryAsync<Document>(localSql, localQuery._queryState._sqlBuilder.Parameters, localTransaction, localQuery._session._store.Configuration.CommandTimeout);
                         },
                         _query,
                         sql,

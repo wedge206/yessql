@@ -19,6 +19,7 @@ namespace YesSql
             SessionPoolSize = 16;
             QueryGatingEnabled = true;
             Logger = NullLogger.Instance;
+            CommandTimeout = 60;
         }
 
         public IIdentifierFactory IdentifierFactory { get; set; }
@@ -30,5 +31,6 @@ namespace YesSql
         public bool QueryGatingEnabled { get; set; }
         public IIdGenerator IdGenerator { get; set; }
         public ILogger Logger { get; set; }
+        public int CommandTimeout { get; set; }
     }
 }

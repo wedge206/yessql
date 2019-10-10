@@ -258,7 +258,7 @@ namespace YesSql
                     var localParameters = (object)args[4];
 
                     localStore.Configuration.Logger.LogTrace(localCommand);
-                    return localConnection.QueryAsync<Document>(localCommand, localParameters, localTransaction);
+                    return localConnection.QueryAsync<Document>(localCommand, localParameters, localTransaction, localStore.Configuration.CommandTimeout);
                 },
                 _store,
                 _connection,
@@ -349,7 +349,7 @@ namespace YesSql
                     var localCommand = (string)args[2];
                     var localParamters = args[3];
 
-                    return localConnection.QueryAsync<Document>(localCommand, localParamters, localTransaction);
+                    return localConnection.QueryAsync<Document>(localCommand, localParamters, localTransaction, _store.Configuration.CommandTimeout);
                 },
                 _connection,
                 _transaction,
@@ -816,7 +816,7 @@ namespace YesSql
             var name = _tablePrefix + descriptor.IndexType.Name;
             var sql = "select * from " + _dialect.QuoteForTableName(name) + " where " + _dialect.QuoteForColumnName(descriptor.GroupKey.Name) + " = @currentKey";
 
-            var index = await _connection.QueryAsync(descriptor.IndexType, sql, new { currentKey }, _transaction);
+            var index = await _connection.QueryAsync(descriptor.IndexType, sql, new { currentKey }, _transaction, _store.Configuration.CommandTimeout);
             return index.FirstOrDefault() as ReduceIndex;
         }
 
