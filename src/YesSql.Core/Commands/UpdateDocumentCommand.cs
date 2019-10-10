@@ -17,13 +17,13 @@ namespace YesSql.Commands
             _tablePrefix = tablePrefix;
         }
 
-        public override Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, ILogger logger)
+        public override Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, int timeout, ILogger logger)
         {
             var documentTable = CollectionHelper.Current.GetPrefixedName(Store.DocumentTable);
 
             var updateCmd = "update " + dialect.QuoteForTableName(_tablePrefix + documentTable) + " set " + dialect.QuoteForColumnName("Content") + " = @Content where " + dialect.QuoteForColumnName("Id") + " = @Id;";
             logger.LogTrace(updateCmd);
-            return connection.ExecuteScalarAsync<int>(updateCmd, Document, transaction);
+            return connection.ExecuteScalarAsync<int>(updateCmd, Document, transaction, timeout);
         }
     }
 }

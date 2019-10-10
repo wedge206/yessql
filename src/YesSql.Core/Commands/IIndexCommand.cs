@@ -6,7 +6,7 @@ namespace YesSql.Commands
 {
     public interface IIndexCommand
     {
-        Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, ILogger logger);
+        Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, int timeout, ILogger logger);
         int ExecutionOrder { get; }
     }
 }

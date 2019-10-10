@@ -26,13 +26,13 @@ namespace YesSql.Commands
             _deletedDocumentIds = deletedDocumentIds;
         }
 
-        public override async Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, ILogger logger)
+        public override async Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, int timeout, ILogger logger)
         {
             var type = Index.GetType();
 
             var sql = Updates(type, dialect);
             logger.LogTrace(sql);
-            await connection.ExecuteAsync(sql, Index, transaction);
+            await connection.ExecuteAsync(sql, Index, transaction, timeout);
 
             // Update the documents list
             if (Index is ReduceIndex reduceIndex)
@@ -44,10 +44,10 @@ namespace YesSql.Commands
                 var bridgeSqlRemove = "delete from " + dialect.QuoteForTableName(_tablePrefix + bridgeTableName) + " where " + dialect.QuoteForColumnName("DocumentId") + " = @DocumentId and " + dialect.QuoteForColumnName(type.Name + "Id") + " = @Id;";
 
                 logger.LogTrace(bridgeSqlAdd);
-                await connection.ExecuteAsync(bridgeSqlAdd, _addedDocumentIds.Select(x => new { DocumentId = x, Id = Index.Id }), transaction);
+                await connection.ExecuteAsync(bridgeSqlAdd, _addedDocumentIds.Select(x => new { DocumentId = x, Id = Index.Id }), transaction, timeout);
 
                 logger.LogTrace(bridgeSqlRemove);
-                await connection.ExecuteAsync(bridgeSqlRemove, _deletedDocumentIds.Select(x => new { DocumentId = x, Id = Index.Id }), transaction);
+                await connection.ExecuteAsync(bridgeSqlRemove, _deletedDocumentIds.Select(x => new { DocumentId = x, Id = Index.Id }), transaction, timeout);
             }
         }
     }

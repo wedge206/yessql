@@ -15,7 +15,7 @@ namespace YesSql.Commands
 
         public override int ExecutionOrder { get; } = 1;
 
-        public override async Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, ILogger logger)
+        public override async Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, int timeout, ILogger logger)
         {
             var name = Index.GetType().Name;
 
@@ -23,10 +23,10 @@ namespace YesSql.Commands
             var bridgeTableName = name + "_" + documentTable;
             var bridgeSql = "delete from " + dialect.QuoteForTableName(_tablePrefix + bridgeTableName) +" where " + dialect.QuoteForColumnName(name + "Id") + " = @Id";
             logger.LogTrace(bridgeSql);
-            await connection.ExecuteAsync(bridgeSql, new { Id = Index.Id }, transaction);
+            await connection.ExecuteAsync(bridgeSql, new { Id = Index.Id }, transaction, timeout);
             var command = "delete from " + dialect.QuoteForTableName(_tablePrefix + name) + " where " + dialect.QuoteForColumnName("Id") + " = @Id";
             logger.LogTrace(command);
-            await connection.ExecuteAsync(command, new { Id = Index.Id }, transaction);
+            await connection.ExecuteAsync(command, new { Id = Index.Id }, transaction, timeout);
         }
     }
 }

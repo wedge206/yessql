@@ -21,11 +21,11 @@ namespace YesSql.Commands
             _tablePrefix = tablePrefix;
         }
 
-        public Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, ILogger logger )
+        public Task ExecuteAsync(DbConnection connection, DbTransaction transaction, ISqlDialect dialect, int timeout, ILogger logger )
         {
             var command = "delete from " + dialect.QuoteForTableName(_tablePrefix + _indexType.Name) + " where " + dialect.QuoteForColumnName("DocumentId") + " = @Id";
             logger.LogTrace(command);
-            return connection.ExecuteAsync(command, new { Id = _documentId }, transaction);
+            return connection.ExecuteAsync(command, new { Id = _documentId }, transaction, timeout);
         }
     }
 }
